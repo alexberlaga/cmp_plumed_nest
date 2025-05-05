@@ -19,13 +19,13 @@ for folder in "${folders[@]}"; do
     cd "$folder"
     rm -f equil* umbrella*
     cp ../topol.top .
-    gmx_mpi grompp -f ../npt_umbrella.mdp -c npt.gro -p topol.top -o equil.tpr -maxwarn 2
+    gmx_mpi grompp -f ../umbrella_equil.mdp -c npt.gro -p topol.top -o equil.tpr -maxwarn 2
     cd ..
 done
 mpirun -np $NP gmx_mpi mdrun -deffnm equil -multidir $f_str -v -plumed plumed.dat -ntomp 1
 for folder in "${folders[@]}"; do
     cd "$folder"
-    gmx_mpi grompp -f ../npt_run.mdp -c equil.gro -t equil.cpt -p topol.top -o umbrella.tpr -maxwarn 2
+    gmx_mpi grompp -f ../umbrella_run.mdp -c equil.gro -t equil.cpt -p topol.top -o umbrella.tpr -maxwarn 2
     cd ..
 done
 mpirun -np $NP gmx_mpi mdrun -deffnm umbrella -multidir $f_str -v -plumed plumed.dat -ntomp 1
